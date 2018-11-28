@@ -1,0 +1,76 @@
+from twilio.rest import Client
+import cv2
+import time
+import os
+import numpy as np
+import flickrapi
+import requests
+from bs4 import BeautifulSoup
+
+account_sid = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' #Input your twilio account_sid
+auth_token = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' #Input your twilio auth_token
+key = u'xxxxxxxxxxxxxxxxxxxxxxxxx' #Input your Flickr Key
+secret = u'26ea64cdbefad5fe' #Input your secret key
+user_id = u'145518441@N08' #User ID
+
+def text_master():
+    
+    while True:
+        cap = cv2.VideoCapture(0)
+        time_to_sleep = 3600
+        #Declaring the flicker write ability
+        flickr = flickrapi.FlickrAPI(key, secret)
+        flickr.authenticate_via_browser(perms=u'write')
+
+        #Declaring the flicker read ability
+        flickr2 = flickrapi.FlickrAPI(key, secret,format='parsed-json')
+        flickr2.authenticate_via_browser(perms=u'read')
+
+
+        for x in range(5):
+            ret, frame = cap.read()
+
+            #Write frame from video to directory
+            cv2.imwrite("C:\\gordons_face\\surveillance_photos\\"+'opencv'+str(x)+'.png', frame)
+
+            #Uploads/Writes file from specified directory to flickr
+            flickr.upload("C:\\gordons_face\\surveillance_photos\\"+'opencv'+str(x)+'.png')
+            print('Flickr uploaded: ' + 'opencv' + str(x) + '.png')
+
+            if cv2.waitKey(20) & 0xFF == ord('q'):
+                break
+
+        #include Kills all video windows
+        cap.release()
+        cv2.destroyAllWindows()
+
+        #Declares the list of urls from flickr
+        picList = []
+
+        #Using Flickr search function to list image object including their urls
+        sizes = flickr2.photos.search(user_id= user_id, extras = 'url_n')
+
+        #Grabs all photos with their elements in Dictionary
+        photos = sizes['photos']
+        
+        #Grabs each individual photo with their elements
+        photo_qualities = photos['photo']
+
+        for x in range(5):
+            #Grabs each photo and the url of image
+            picList.append(photo_qualities[x]['url_n'])
+        print(picList)
+
+        #Sleep for an hour or however long you specify the variable
+        time.sleep(time_to_sleep)
+
+        #Send 5 Messages of the frames that were taken in video capture that were uploaded to Flickr
+        client = Client(account_sid, auth_token)
+        for x in range(5):
+            message = client.messages \
+                .create(
+                    body='feed' + str(x),
+                    from_='Your Twilio Number',
+                    to='Any Number',
+                    media_url=picList[x])
+text_master()
