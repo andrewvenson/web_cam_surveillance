@@ -10,8 +10,8 @@ from bs4 import BeautifulSoup
 account_sid = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' #Input your twilio account_sid
 auth_token = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' #Input your twilio auth_token
 key = u'xxxxxxxxxxxxxxxxxxxxxxxxx' #Input your Flickr Key
-secret = u'xxxxxxxxxxxxxx' #Input your secret key
-user_id = u'xxxxxxxxxxxxx' #User ID
+secret = u'xxxxxxxxxxxxxx' #Input your Flickr secret
+user_id = u'xxxxxxxxxxxxx' #Input your Flickr User ID
 
 def text_master():
     
