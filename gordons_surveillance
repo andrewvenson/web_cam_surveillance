@@ -31,10 +31,10 @@ def text_master():
             ret, frame = cap.read()
 
             #Write frame from video to directory
-            cv2.imwrite("C:\\gordons_face\\surveillance_photos\\"+'opencv'+str(x)+'.png', frame)
+            cv2.imwrite("/Path to store photos/"+'opencv'+str(x)+'.png', frame)
 
             #Uploads/Writes file from specified directory to flickr
-            flickr.upload("C:\\gordons_face\\surveillance_photos\\"+'opencv'+str(x)+'.png')
+            flickr.upload("/Path to photos/"+'opencv'+str(x)+'.png')
             print('Flickr uploaded: ' + 'opencv' + str(x) + '.png')
 
             if cv2.waitKey(20) & 0xFF == ord('q'):
